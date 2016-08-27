@@ -1,5 +1,6 @@
 # This Python file uses the following encoding: utf-8
 # Test commit
+
 import os, sys
 
 arabic2english = {
@@ -69,7 +70,7 @@ def transString(string, reverse=0):
     silents = ["|", "&", "F", "N", "K", "a", "u", "i", "~", "o", "{"]
 
     if not reverse:     
-        for k,v in arabic2english.iteritems():
+        for k,v in arabic2english.items():
             string = string.replace(k,v)
         for letter in silents:
             string = string.replace(letter, "")
@@ -80,8 +81,8 @@ def transString(string, reverse=0):
 
     return string
 
-with open("C:/Users/Navid/Documents/Python Scripts/quran-simple.txt", "r") as f:
-    q = f.reads()
+with open("C:/Users/Navid/Documents/Python Scripts/quran-text-analysis/quran-simple.txt", encoding="utf-8") as f:
+    q = f.read()
 
 s = transString(q[0:500], 0)
 print(s)
