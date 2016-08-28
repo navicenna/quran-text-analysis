@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 # Test commit
 
-import os, sys
+import os, sys, re
 
 arabic2english = {
       u"\u0621": "'", # hamza-on-the-line
@@ -67,25 +67,43 @@ arabic2english = {
 def transString(string, reverse=0):
     '''Given a Unicode string, transliterate into Buckwalter. To go from
     Buckwalter back to Unicode, set reverse=1'''
-    silents = ["|", "&", "F", "N", "K", "a", "u", "i", "~", "o", "{"]
+    silents = ["|", "&", "F", "N", "K", "a", "u", "i", "~", "o", "{"] #map these diacritical marks to empty string
 
-    if not reverse:     
-        for k,v in arabic2english.items():
-            string = string.replace(k,v)
-        for letter in silents:
-            string = string.replace(letter, "")
-
-    else:     
-        for k,v in arabic2english.iteritems():
-            string = string.replace(v,k)
+    string = string.replace("|", ".") 
+    for k,v in arabic2english.items():
+        string = string.replace(k,v)
+    for letter in silents:
+        string = string.replace(letter, "")
 
     return string
 
-with open("C:/Users/Navid/Documents/Python Scripts/quran-text-analysis/quran-simple.txt", encoding="utf-8") as f:
-    q = f.read()
+quran_dir = "C:/Users/Navid/Documents/Python Scripts/quran-text-analysis/" 
+quran_file = "quran-simple.txt"
 
-s = transString(q[0:500], 0)
-print(s)
+# with open( (quran_dir+quran_file), encoding="utf-8") as f:
+#     q = f.read()
+
+# s = transString(q, 0)
+
+# with open(quran_dir+"quran-transliterated.txt", "w") as f:
+#     f.write(s)
+
+with open(quran_dir+"quran-transliterated.txt", "r") as f:
+    lines = [l.rstrip('\n') for l in f.readlines()]
+
+print(lines[0:10])
+
+def verse2dict(verse):
+    rd = {}
+    rd["sura"] = re.match("\d{1,3}\.", verse).group(0)[0:-1]
+    rd["verse"] = re.search("\.\d{1,3}\.", verse).group(0)[1:-1]
+    rd["text"] = verse[re.search("\.\d{1,3}\.", verse).end(0):]
+    return rd
+
+
+
+test = line2dict(lines[0])
+print(test)
 
 
 # print "TESTING CODE"
